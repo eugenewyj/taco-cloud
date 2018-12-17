@@ -4,7 +4,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -15,19 +15,19 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class Order {
-    @NotNull(message = "名字不能为空")
+    @NotBlank(message = "名字不能为空")
     private String name;
 
-    @NotNull(message = "街道不能为空")
+    @NotBlank(message = "街道不能为空")
     private String street;
 
-    @NotNull(message = "城市不能为空")
+    @NotBlank(message = "城市不能为空")
     private String city;
 
-    @NotNull(message = "省份不能为空")
+    @NotBlank(message = "省份不能为空")
     private String state;
 
-    @NotNull(message = "zip码不能为空")
+    @NotBlank(message = "zip码不能为空")
     private String zip;
 
     @CreditCardNumber(message = "信用卡账号非法")

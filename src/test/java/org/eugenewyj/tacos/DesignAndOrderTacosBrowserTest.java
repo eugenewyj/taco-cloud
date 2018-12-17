@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -60,6 +61,81 @@ public class DesignAndOrderTacosBrowserTest {
         buildAndSubmitATaco("Another Taco", "COTO", "CARN", "JACK", "LETC", "SRCR");
         fillInAndSubmitOrderForm();
         assertEquals(homePageUrl(), browser.getCurrentUrl());
+    }
+
+    @Test
+    public void testDesignATacoPage_EmptyOrderInfo() {
+        browser.get(homePageUrl());
+        clickDesignATaco();
+        assertDesignPageElements();
+        buildAndSubmitATaco("Basic Taco", "FLTO", "GRBF", "CHED", "TMTO", "SLSA");
+        submitEmptyOrderForm();
+        fillInAndSubmitOrderForm();
+        assertEquals(homePageUrl(), browser.getCurrentUrl());
+    }
+
+    @Test
+    public void testDesignATacoPage_InvalidOrderInfo() {
+        browser.get(homePageUrl());
+        clickDesignATaco();
+        assertDesignPageElements();
+        buildAndSubmitATaco("Basic Taco", "FLTO", "GRBF", "CHED", "TMTO", "SLSA");
+        submitInvalidOrderForm();
+        fillInAndSubmitOrderForm();
+        assertEquals(homePageUrl(), browser.getCurrentUrl());
+    }
+
+    private void submitInvalidOrderForm() {
+        assertTrue(browser.getCurrentUrl().startsWith(orderDetailsPageUrl()));
+        fillField("input#name", "I");
+        fillField("input#street", "1");
+        fillField("input#city", "F");
+        fillField("input#state", "C");
+        fillField("input#zip", "8");
+        fillField("input#ccNumber", "1234432112344322");
+        fillField("input#ccExpiration", "14/91");
+        fillField("input#ccCVV", "1234");
+        browser.findElementByCssSelector("form").submit();
+
+        assertEquals(orderDetailsPageUrl(), browser.getCurrentUrl());
+
+        List<String> validationErrors = getValidationErrorTexts();
+        assertEquals(4, validationErrors.size());
+        assertTrue(validationErrors.contains("Please correct the problems below and resubmit."));
+        assertTrue(validationErrors.contains("信用卡账号非法"));
+        assertTrue(validationErrors.contains("格式必须是 MM/YY"));
+        assertTrue(validationErrors.contains("CVV非法"));
+    }
+
+    private void submitEmptyOrderForm() {
+        assertEquals(currentOrderDetailsPageUrl(), browser.getCurrentUrl());
+        browser.findElementByCssSelector("form").submit();
+
+        assertEquals(orderDetailsPageUrl(), browser.getCurrentUrl());
+
+        List<String> validationErrors = getValidationErrorTexts();
+        assertEquals(9, validationErrors.size());
+        assertTrue(validationErrors.contains("Please correct the problems below and resubmit."));
+        assertTrue(validationErrors.contains("名字不能为空"));
+        assertTrue(validationErrors.contains("街道不能为空"));
+        assertTrue(validationErrors.contains("城市不能为空"));
+        assertTrue(validationErrors.contains("省份不能为空"));
+        assertTrue(validationErrors.contains("zip码不能为空"));
+        assertTrue(validationErrors.contains("信用卡账号非法"));
+        assertTrue(validationErrors.contains("格式必须是 MM/YY"));
+        assertTrue(validationErrors.contains("CVV非法"));
+    }
+
+    private List<String> getValidationErrorTexts() {
+        List<WebElement> validationErrorElments = browser.findElementsByClassName("validationError");
+        List<String> validationErrors = validationErrorElments.stream()
+                .map(e -> e.getText())
+                .collect(Collectors.toList());
+        return validationErrors;
+    }
+
+    private String currentOrderDetailsPageUrl() {
+        return homePageUrl() + "orders/current";
     }
 
     private void clickDesignATaco() {
