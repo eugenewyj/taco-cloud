@@ -1,9 +1,13 @@
 package org.eugenewyj.tacos;
 
+import org.eugenewyj.tacos.data.IngredientRepository;
+import org.eugenewyj.tacos.data.OrderRepository;
+import org.eugenewyj.tacos.data.TacoRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +27,15 @@ public class HomeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private OrderRepository orderRepository;
+
+    @MockBean
+    private TacoRepository tacoRepository;
+
+    @MockBean
+    private IngredientRepository ingredientRepository;
 
     @Test
     public void testHome() throws Exception {

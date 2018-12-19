@@ -1,12 +1,16 @@
 package org.eugenewyj.tacos;
 
 import org.eugenewyj.tacos.Ingredient.Type;
+import org.eugenewyj.tacos.data.IngredientRepository;
+import org.eugenewyj.tacos.data.OrderRepository;
+import org.eugenewyj.tacos.data.TacoRepository;
 import org.eugenewyj.tacos.web.DesignTacoController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,6 +39,15 @@ public class DesignTacoControllerTest {
     private List<Ingredient> ingredients;
     private Taco design;
 
+    @MockBean
+    private IngredientRepository ingredientRepository;
+
+    @MockBean
+    private TacoRepository tacoRepository;
+
+    @MockBean
+    private OrderRepository orderRepository;
+
     @Before
     public void setup() {
         ingredients = Arrays.asList(
@@ -48,6 +62,9 @@ public class DesignTacoControllerTest {
                 new Ingredient("SLSA", "Salsa", Type.SAUCE),
                 new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
         );
+
+        when(ingredientRepository.findAll())
+                .thenReturn(ingredients);
 
         design = new Taco();
         design.setName("Test Taco");

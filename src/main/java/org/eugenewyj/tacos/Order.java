@@ -6,6 +6,9 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Order
@@ -15,20 +18,25 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class Order {
+
+    private Long id;
+
+    private LocalDateTime placedAt;
+
     @NotBlank(message = "名字不能为空")
-    private String name;
+    private String deliveryName;
 
     @NotBlank(message = "街道不能为空")
-    private String street;
+    private String deliveryStreet;
 
     @NotBlank(message = "城市不能为空")
-    private String city;
+    private String deliveryCity;
 
     @NotBlank(message = "省份不能为空")
-    private String state;
+    private String deliveryState;
 
     @NotBlank(message = "zip码不能为空")
-    private String zip;
+    private String deliveryZip;
 
     @CreditCardNumber(message = "信用卡账号非法")
     private String ccNumber;
@@ -39,4 +47,10 @@ public class Order {
 
     @Digits(integer = 3, fraction = 0, message = "CVV非法")
     private String ccCVV;
+
+    private List<Taco> tacos = new ArrayList<>();
+
+    public void addDesign(Taco saved) {
+        this.tacos.add(saved);
+    }
 }

@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Data
 public class Taco {
+    private Long id;
 
     @NotNull
     @Size(min=5, message = "名称必须大于5个字符")
