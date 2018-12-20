@@ -3,7 +3,6 @@ package org.eugenewyj.tacos.web;
 import lombok.extern.slf4j.Slf4j;
 import org.eugenewyj.tacos.Order;
 import org.eugenewyj.tacos.data.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 
 /**
@@ -27,7 +27,7 @@ public class OrderController {
 
     private OrderRepository orderRepository;
 
-    @Autowired
+    @Inject
     public OrderController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
