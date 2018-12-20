@@ -5,8 +5,10 @@ import org.eugenewyj.tacos.Ingredient;
 import org.eugenewyj.tacos.Ingredient.Type;
 import org.eugenewyj.tacos.Order;
 import org.eugenewyj.tacos.Taco;
+import org.eugenewyj.tacos.User;
 import org.eugenewyj.tacos.data.IngredientRepository;
 import org.eugenewyj.tacos.data.TacoRepository;
+import org.eugenewyj.tacos.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,11 +35,13 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepository;
     private TacoRepository tacoRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
+    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository, UserRepository userRepository) {
         this.ingredientRepository = ingredientRepository;
         this.tacoRepository = tacoRepository;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute(name = "order")
@@ -44,13 +49,13 @@ public class DesignTacoController {
         return new Order();
     }
 
-    @ModelAttribute(name = "taco")
+    @ModelAttribute(name = "design")
     public Taco taco() {
         return new Taco();
     }
 
     @GetMapping
-    public String showDesignForm(Model model) {
+    public String showDesignForm(Model model, Principal principal) {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredientRepository.findAll().forEach(i -> ingredients.add(i));
 
@@ -58,6 +63,10 @@ public class DesignTacoController {
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
         }
+
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
 
         return "design";
     }

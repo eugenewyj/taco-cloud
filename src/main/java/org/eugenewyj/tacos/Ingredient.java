@@ -1,7 +1,12 @@
 package org.eugenewyj.tacos;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * Ingredient（配料）
@@ -9,10 +14,13 @@ import lombok.RequiredArgsConstructor;
  * @author eugene
  * @date 2018/12/12
  */
+@Entity
 @Data
 @RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Ingredient {
 
+    @Id
     private final String id;
     private final String name;
     private final Type type;

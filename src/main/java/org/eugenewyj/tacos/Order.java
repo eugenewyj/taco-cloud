@@ -3,6 +3,7 @@ package org.eugenewyj.tacos;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -16,12 +17,20 @@ import java.util.List;
  * @author eugene
  * @date 2018/12/15
  */
+@Entity
+@Table(name = "Taco_Order")
 @Data
 public class Order {
+    private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private LocalDateTime placedAt;
+
+    @ManyToOne
+    private User user;
 
     @NotBlank(message = "名字不能为空")
     private String deliveryName;
@@ -48,9 +57,15 @@ public class Order {
     @Digits(integer = 3, fraction = 0, message = "CVV非法")
     private String ccCVV;
 
+    @ManyToMany(targetEntity = Taco.class)
     private List<Taco> tacos = new ArrayList<>();
 
     public void addDesign(Taco saved) {
         this.tacos.add(saved);
+    }
+
+    @PrePersist
+    void placedAt() {
+        this.placedAt = LocalDateTime.now();
     }
 }
