@@ -1,0 +1,31 @@
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        security: WARN
+
+
+taco:
+  orders:
+    page-size: 10
+
+spring:
+  profiles:
+    active:
+      - dev
+
+---
+spring:
+  profiles: dev
+
+taco:
+  orders:
+    page-size: 2
+
+logging:
+  org:
+    eugenewyj:
+      tacos: DEBUG
+    springframework:
+      security: DEBUG
