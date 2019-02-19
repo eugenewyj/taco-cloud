@@ -16,7 +16,7 @@
 </form>
 
 <form th:method="POST" th:object="${design}" th:action="@{/design}" id="tacoForm">
-
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
     <span class="validationError"
           th:if="${#fields.hasErrors('ingredients')}"
           th:errors="*{ingredients}">Ingredient Error</span>

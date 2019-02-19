@@ -10,6 +10,7 @@
 <img th:src="@{/images/TacoCloud.png}"/>
 
 <form method="POST" th:action="@{/register}" id="registerForm">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
     <label for="username">Username: </label>
     <input type="text" name="username"/><br/>
